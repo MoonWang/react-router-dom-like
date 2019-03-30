@@ -10,6 +10,16 @@ module.exports = {
         path: path.resolve(__dirname, 'dist'),
         filename: 'bundle.js'
     },
+    resolve: {
+        alias: {
+            'lib': path.resolve(__dirname, 'lib')
+        },
+        modules: [
+            // path.resolve(__dirname, 'lib'),
+            path.resolve(__dirname, 'node_modules')
+        ],
+        mainFields: ['jsnext:main', 'browser', 'main']
+    },
     module: {
         rules: [
             {
@@ -23,7 +33,10 @@ module.exports = {
             },
             {
                 test: /\.js$/,
-                include: path.resolve(__dirname, 'src'),
+                include: [
+                    path.resolve(__dirname, 'src'),
+                    path.resolve(__dirname, 'lib'),
+                ],
                 exclude: /node_modules/,
                 loader: 'babel-loader?cacheDirectory'
             }
