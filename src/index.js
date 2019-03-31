@@ -20,16 +20,19 @@ let User = () => {
                 <li><Link to="/user/add">user-add</Link></li>
                 <li><Link to="/user/del">user-del</Link></li>
                 <li><Link to="/user/list">user-list</Link></li>
+                <li><Link to="/user/detail/1">user-detail</Link></li>
             </ul>
             <Route path="/user/add" component={UserAdd}/>
             <Route path="/user/del" component={UserDel}/>
             <Route path="/user/list" component={UserList}/>
+            <Route path="/user/detail/:id" component={UserDetail}/>
         </>
     )
 }
 let UserAdd = () => <div>用户添加</div>
 let UserDel = () => <div>用户删除</div>
 let UserList = () => <div>用户列表</div>
+let UserDetail = (props) => <div>用户详情:{props.match.params.id}</div>
 let Profile = () => <div>个人设置</div>
 
 ReactDOM.render((

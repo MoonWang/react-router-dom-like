@@ -88,5 +88,47 @@ render() {
 
 ### 3、嵌套路由
 
-简单实现就是判断路由的时候，增加一个判断条件 pathname.startsWith(path) ，或关系
+简单实现就是判断路由的时候，增加一个判断条件 pathname.startsWith(path) ，或关系。
 
+注：后面会用正则进行前缀匹配，暂时先这么处理。
+
+### 4、路由参数
+
+思路：回忆 express 路由实现，最终就是`正则匹配`路由，获取并缓存路由参数 key ，匹配成功时对应填充 value。
+eg:
+```javascript
+var props = {
+    match: {
+        url: '/user/detail/1',
+        path: '/user/detail/:id',
+        params: {id:1}
+    }
+}
+```
+
+```bash
+$ npm i path-to-regexp -S
+```
+
+```javascript
+// Route.js
+this.keys = [];
+this.regexp = pathToRegexp(this.props.path, this.keys, { end: false }); // 只匹配前缀
+this.keys = this.keys.map(key => key.name); // 只需要缓存 name
+
+// 匹配路由，获取 params 
+let rst = context.loacation.pathname.match(this.regexp);
+
+let [url, ...values] = rst;
+// 获取 key 对应参数值
+let params = this.keys.reduce((memo, key, index) => {
+    memo[key] = values[index];
+    return memo;
+}, {});
+
+context.match = {
+    url,
+    path,
+    params
+};
+```
