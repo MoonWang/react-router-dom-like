@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 // import { HashRouter, Route, Link } from 'react-router-dom';
-import { HashRouter, Route } from 'lib/react-router-dom';
+import { HashRouter, Route, Link } from 'lib/react-router-dom';
 
 import ErrorBoundary from './ErrorBoundary';
 
@@ -18,11 +18,11 @@ let Profile = () => <div>个人设置</div>
 ReactDOM.render((
     <ErrorBoundary>
         <HashRouter>
-            {/* <ul>
+            <ul>
                 <li><Link to="/home">home</Link></li>
                 <li><Link to="/user">user</Link></li>
                 <li><Link to="/profile">profile</Link></li>
-            </ul> */}
+            </ul>
             <Route path="/home" component={Home}/>
             <Route path="/user" component={User}/>
             <Route path="/profile" component={Profile}/>
