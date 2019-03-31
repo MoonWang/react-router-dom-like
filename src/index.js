@@ -5,6 +5,7 @@ import { HashRouter, Route, Link, Switch, Redirect } from 'lib/react-router-dom'
 
 import ErrorBoundary from './ErrorBoundary';
 import Protected from './component/Protected';
+import MenuLink from './component/MenuLink';
 
 import './index.less';
 
@@ -47,9 +48,9 @@ ReactDOM.render((
     <ErrorBoundary>
         <HashRouter>
             <ul>
-                <li><Link to="/home">home</Link></li>
-                <li><Link to="/user">user</Link></li>
-                <li><Link to="/profile">profile</Link></li>
+                <MenuLink to="/home">home</MenuLink>
+                <MenuLink to="/user">user</MenuLink>
+                <MenuLink to="/profile">profile</MenuLink>
             </ul>
             <Switch>
                 <Route path="/login" component={Login}/>

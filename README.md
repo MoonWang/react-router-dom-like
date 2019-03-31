@@ -117,10 +117,10 @@ let keys = [];
 // 使用 switch 时，要动态创建 regexp
 let regexp = pathToRegexp(path, keys, { end: false }); // 只匹配前缀
 
-let {location: { pathname }} = context;
 // 匹配路由，获取 params 
-let rst = pathname.match(regexp);
+let rst = context.location.pathname.match(regexp);
 
+let props = {...context};
 if(rst) {
     // 匹配成功的时候才更新 keys
     keys = keys.map(key => key.name);
@@ -131,13 +131,13 @@ if(rst) {
         return memo;
     }, {});
     
-    context.match = {
+    props.match = {
         url,
         path,
         params
     };
 
-    return <Component {...context} />;
+    return <Component {...props} />;
 } else {
     return null;
 }
@@ -193,12 +193,12 @@ push(path) {
 }
 ```
 
-### 7、自定义需权限(受保护)路由
+### 7、 render 实现自定义权限路由
 
 日常开发中，经常需要设置某些路由的访问权限，实现一个需要登录权限的自定义 Route 组件。
 
 思路：
-1. 创建一个 Protected 组件(可以根据情况替换成语义命名)，替换原来的 Route 组件
+1. 创建一个 Protected `高阶组件`(可以根据情况替换成语义命名)，替换原来的 Route 组件
 2. 该组件传入的参数和 Route 相同即可
 3. Protected 组件内判断是否有相关权限，有则渲染 component 组件 ，无则渲染 Redirect 组件进行重定向
     - 重定向时，传入 from 
@@ -212,3 +212,21 @@ push(path) {
         <Redirect to={{pathname: '/login', state: {from: props.location.pathname}}} />
 )}/>
 ```
+
+### 8、 children 实现自定义菜单路由
+
+说明：Route 除了支持 component 、render 外，还支持 children 参数，render 是只有在匹配到后才会执行，children 无论是否路由匹配到都会执行此函数。
+
+思路：依然采用高阶组件，在其中做些额外操作，比如判断是否选中
+
+```javascript
+<Route
+    path={ to }
+    children={ props => (
+        <li className={props.match ? "active": ""}>
+            <Link to={ to } className="nav-link">{children}</Link>
+        </li>
+    )}
+/>
+```
+
