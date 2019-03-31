@@ -143,7 +143,7 @@ if(rst) {
 }
 ```
 
-### 5、Switch 组件
+### 5、 Switch 组件
 
 效果：Route 组件只要匹配地址成功的都会渲染（可能会渲染多个），但 Switch 组件只渲染一个路由（即使可以匹配多个）。
 
@@ -160,7 +160,7 @@ for(let i = 0; i < children.length; i++) {
 return null;
 ```
 
-### 6、Redirect 重定向组件
+### 6、 Redirect 重定向组件
 
 该组件并不是一个渲染组件，而是一个执行重定向操作的组件。所以 render 返回 null，主要操作在 push 方法的调用。
 
@@ -191,4 +191,24 @@ push(path) {
         })
     });
 }
+```
+
+### 7、自定义需权限(受保护)路由
+
+日常开发中，经常需要设置某些路由的访问权限，实现一个需要登录权限的自定义 Route 组件。
+
+思路：
+1. 创建一个 Protected 组件(可以根据情况替换成语义命名)，替换原来的 Route 组件
+2. 该组件传入的参数和 Route 相同即可
+3. Protected 组件内判断是否有相关权限，有则渲染 component 组件 ，无则渲染 Redirect 组件进行重定向
+    - 重定向时，传入 from 
+    - Protected 内部使用的 render 方法来进行权限判断执行不同渲染，所以 Route.js 需要支持 `render` 参数
+    - Route 渲染的优先级： component > render 
+
+```javascript
+<Route {...other} render={ props => (
+    localStorage.getItem('login') ? 
+        <Component {...props} /> :
+        <Redirect to={{pathname: '/login', state: {from: props.location.pathname}}} />
+)}/>
 ```

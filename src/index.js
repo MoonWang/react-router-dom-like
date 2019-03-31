@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import { HashRouter, Route, Link, Switch, Redirect } from 'lib/react-router-dom';
 
 import ErrorBoundary from './ErrorBoundary';
+import Protected from './component/Protected';
 
 import './index.less';
 
@@ -13,9 +14,6 @@ let Home = (props, context) => {
     return <div>首页</div>
 }
 let User = () => {
-    if(!localStorage.getItem('login')) {
-        return <Redirect to={{pathname: "/login", state:{ from: "/user"}}}/>
-    }
     return (
         <>
             <div>用户管理</div>
@@ -56,7 +54,7 @@ ReactDOM.render((
             <Switch>
                 <Route path="/login" component={Login}/>
                 <Route path="/home" component={Home}/>
-                <Route path="/user" component={User}/>
+                <Protected path="/user" component={User}/>
                 <Route path="/profile" component={Profile}/>
             </Switch>
         </HashRouter>
