@@ -1,18 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-// import { HashRouter, Route, Link, Switch } from 'react-router-dom';
-import { HashRouter, Route, Link, Switch } from 'lib/react-router-dom';
+// import { HashRouter, Route, Link, Switch, Redirect } from 'react-router-dom';
+import { HashRouter, Route, Link, Switch, Redirect } from 'lib/react-router-dom';
 
 import ErrorBoundary from './ErrorBoundary';
 
 import './index.less';
 
 let Home = (props, context) => {
-    console.log('render');
     console.log(props);
+    localStorage.removeItem('login');
     return <div>首页</div>
 }
 let User = () => {
+    if(!localStorage.getItem('login')) {
+        return <Redirect to={{pathname: "/login", state:{ from: "/user"}}}/>
+    }
     return (
         <>
             <div>用户管理</div>
@@ -35,6 +38,12 @@ let UserList = () => <div>用户列表</div>
 let UserDetail = (props) => <div>用户详情:{props.match.params.id}</div>
 
 let Profile = () => <div>个人设置</div>
+let Login = (props) => {
+    localStorage.setItem('login', true);
+    console.log(props);
+    alert('登录成功');
+    return <Redirect to={{pathname: props.location.state.from}}/>
+}
 
 ReactDOM.render((
     <ErrorBoundary>
@@ -45,6 +54,7 @@ ReactDOM.render((
                 <li><Link to="/profile">profile</Link></li>
             </ul>
             <Switch>
+                <Route path="/login" component={Login}/>
                 <Route path="/home" component={Home}/>
                 <Route path="/user" component={User}/>
                 <Route path="/profile" component={Profile}/>

@@ -159,3 +159,36 @@ for(let i = 0; i < children.length; i++) {
 }
 return null;
 ```
+
+### 6、Redirect 重定向组件
+
+该组件并不是一个渲染组件，而是一个执行重定向操作的组件。所以 render 返回 null，主要操作在 push 方法的调用。
+
+```javascript
+// Redirect.js
+<ThemeContext.Consumer>
+    { context => <Lifecycle onMount = {() => context.history.push(this.props.to.pathname)} />}
+</ThemeContext.Consumer>
+```
+
+实际应用，我们还可能会传递其他数据，比如用于登陆成功后重定向回源路由，那么约定除了 `pathname` 以外，还有一个 `state` 对象，用于存储目标路径以外的数据。数据内容没有要求。此时，上面的传递方式有局限性，所以需要修改 Redirect 组件的传递数据，当然作为接收方的 push 方法也要对应增加处理能力。
+
+此外，state 也需要存储在 context.location 中，以便其他组件可以方便获取。
+
+```javascript
+// HashRouter.js
+push(path) {
+    let state = {};
+    if(typeof path == 'object') {
+        state = path.state;
+        path = path.pathname;
+    }
+    window.location.hash = path;
+    this.setState({
+        location: Object.assign({}, this.state.location, {
+            pathname: path,
+            state
+        })
+    });
+}
+```
