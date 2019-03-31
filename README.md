@@ -112,25 +112,35 @@ $ npm i path-to-regexp -S
 
 ```javascript
 // Route.js
-this.keys = [];
-this.regexp = pathToRegexp(this.props.path, this.keys, { end: false }); // 只匹配前缀
-this.keys = this.keys.map(key => key.name); // 只需要缓存 name
 
+let keys = [];
+// 使用 switch 时，要动态创建 regexp
+let regexp = pathToRegexp(path, keys, { end: false }); // 只匹配前缀
+
+let {location: { pathname }} = context;
 // 匹配路由，获取 params 
-let rst = context.loacation.pathname.match(this.regexp);
+let rst = pathname.match(regexp);
 
-let [url, ...values] = rst;
-// 获取 key 对应参数值
-let params = this.keys.reduce((memo, key, index) => {
-    memo[key] = values[index];
-    return memo;
-}, {});
+if(rst) {
+    // 匹配成功的时候才更新 keys
+    keys = keys.map(key => key.name);
 
-context.match = {
-    url,
-    path,
-    params
-};
+    let [url, ...values] = rst;
+    let params = keys.reduce((memo, key, index) => {
+        memo[key] = values[index];
+        return memo;
+    }, {});
+    
+    context.match = {
+        url,
+        path,
+        params
+    };
+
+    return <Component {...context} />;
+} else {
+    return null;
+}
 ```
 
 ### 5、Switch 组件
@@ -149,5 +159,3 @@ for(let i = 0; i < children.length; i++) {
 }
 return null;
 ```
-
-问题：存在切换不渲染的问题，待解决。TODO 
