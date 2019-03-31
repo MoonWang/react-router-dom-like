@@ -132,3 +132,22 @@ context.match = {
     params
 };
 ```
+
+### 5、Switch 组件
+
+效果：Route 组件只要匹配地址成功的都会渲染（可能会渲染多个），但 Switch 组件只渲染一个路由（即使可以匹配多个）。
+
+分析：也是一个组件，替内部的 Route 做匹配抉择，只要匹配成功就终止。
+
+实现：
+```javascript
+for(let i = 0; i < children.length; i++) {
+    let child = children[i];
+    if(pathToRegexp(child.props.path, [], {end: false}).test(pathname)) {
+        return child ;
+    }
+}
+return null;
+```
+
+问题：存在切换不渲染的问题，待解决。TODO 
