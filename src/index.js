@@ -12,7 +12,24 @@ let Home = (props, context) => {
     console.log(context);
     return <div>首页</div>
 }
-let User = () => <div>用户管理</div>
+let User = () => {
+    return (
+        <>
+            <div>用户管理</div>
+            <ul>
+                <li><Link to="/user/add">user-add</Link></li>
+                <li><Link to="/user/del">user-del</Link></li>
+                <li><Link to="/user/list">user-list</Link></li>
+            </ul>
+            <Route path="/user/add" component={UserAdd}/>
+            <Route path="/user/del" component={UserDel}/>
+            <Route path="/user/list" component={UserList}/>
+        </>
+    )
+}
+let UserAdd = () => <div>用户添加</div>
+let UserDel = () => <div>用户删除</div>
+let UserList = () => <div>用户列表</div>
 let Profile = () => <div>个人设置</div>
 
 ReactDOM.render((

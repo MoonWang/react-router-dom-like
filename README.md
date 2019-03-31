@@ -85,3 +85,8 @@ render() {
 查看原 router 库的最终渲染结果，直观表现就是一个 a 标签，按照该表现进行 render , ~~<a href={'#' + this.props.to}>{this.props.children}</a>~~。渲染正常，但点击 Link 后，虽然路由对应更改，但是并没有触发组件渲染更新，所以路由切换并不是由 a 标签的原生表现实现的。
 
 内部绑定了 click 事件，并拦截了默认操作，来实现功能定制。调用 context.history.push 方法，来修改路由，并通过 setState 触发更新。
+
+### 3、嵌套路由
+
+简单实现就是判断路由的时候，增加一个判断条件 pathname.startsWith(path) ，或关系
+
